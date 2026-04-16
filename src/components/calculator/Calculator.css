@@ -1,0 +1,168 @@
+.calculator-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  max-width: 1050px;
+  margin: 0 auto;
+  position: relative;
+  background: var(--color-surface);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md), var(--shadow-inner);
+  border-radius: var(--radius-lg);
+  overflow: hidden; 
+  min-height: 0; /* FIXES FLEXBOX INTRINSIC SIZING OVERFLOW */
+}
+
+/* Inner glow ring simulation */
+.calculator-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%, var(--color-accent-glow) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.display-area {
+  flex: 0 0 auto;
+  padding: var(--spacing-3) var(--spacing-4) var(--spacing-2);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-end;
+  min-height: 110px;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(to bottom, rgba(56, 189, 248, 0.15), rgba(56, 189, 248, 0.02));
+  cursor: text;
+}
+
+.display-expression {
+  text-align: right;
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  transition: font-size var(--transition-bounce), color var(--transition-fast);
+  line-height: 1;
+  min-height: 40px;
+}
+
+.display-expression:focus {
+  color: var(--color-accent-bright);
+}
+
+.display-expression::placeholder {
+  font-size: 1.5rem;
+  color: var(--color-text-muted);
+  font-weight: 500;
+  letter-spacing: normal;
+  text-shadow: none;
+}
+
+.display-result {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: 4px;
+  word-break: break-all;
+  line-height: 1;
+  transition: font-size var(--transition-bounce), color var(--transition-fast);
+  min-height: 30px;
+}
+
+/* Typing Mode (Escribiendo: Expresión es GRANDE, Resultado pequeño) */
+.typing-mode .display-expression {
+  font-size: 3.5rem;
+  color: var(--color-text-main);
+  text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.typing-mode .display-result {
+  font-size: 1.5rem;
+  color: var(--color-text-secondary);
+  text-shadow: none;
+}
+
+/* Evaluated Mode (Caculado: Resultado es GRANDE, Expresion rastro pequeño) */
+.evaluated-mode .display-expression {
+  font-size: 1.5rem;
+  color: var(--color-text-secondary);
+  text-shadow: none;
+}
+
+.evaluated-mode .display-result {
+  font-size: 3.6rem;
+  color: var(--color-accent-bright);
+  text-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.display-result.has-error {
+  color: var(--color-error) !important;
+  font-size: 2.5rem !important;
+  text-shadow: 0 0 15px rgba(239, 68, 68, 0.4) !important;
+}
+
+/* Keypad Layout */
+.keypad-area {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-2) var(--spacing-4) var(--spacing-3);
+  background: linear-gradient(to bottom, rgba(255,255,255,0.02), transparent);
+  min-height: 0; /* CRITICAL SHrink */
+}
+
+.keypad-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, minmax(0, 1fr));
+  gap: var(--spacing-2);
+  height: 100%;
+  min-height: 0;
+}
+
+.keypad-grid.scientific {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+/* Amplificar legibilidad y tamaño general de la botonera dentro del Grid */
+.keypad-grid .ui-button {
+  font-size: 1.4rem;
+  border-radius: var(--radius-xl);
+}
+.keypad-grid .ui-button.default {
+  font-size: 2.2rem; /* Numeros Enormes y Claros */
+  font-weight: 400;
+}
+.keypad-grid .ui-button.operator {
+  font-size: 2rem;
+}
+.keypad-grid .ui-button.science {
+  font-size: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .keypad-grid.scientific {
+    grid-template-columns: repeat(4, 1fr);
+    overflow-y: auto;
+    padding-right: 4px;
+    gap: var(--spacing-2);
+  }
+  .keypad-grid .ui-button.default {
+    font-size: 1.8rem;
+  }
+}
+
+.btn-equals {
+}
+
+.btn-zero {
+  grid-column: span 2;
+}

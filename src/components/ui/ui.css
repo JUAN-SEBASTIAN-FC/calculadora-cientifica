@@ -1,0 +1,96 @@
+.ui-button {
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 500;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-smooth);
+  padding: var(--spacing-1);
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15), var(--shadow-inner);
+  min-height: 0; /* Permitir compresion vertical pura */
+}
+
+.ui-button:active {
+  transform: scale(0.95);
+}
+
+.ui-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-bg-base), 0 0 0 4px var(--color-accent-glow), var(--shadow-inner);
+}
+
+.ui-button.default {
+  background: var(--color-surface);
+  color: var(--color-text-main);
+}
+.ui-button.default:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-accent-glow);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25), 0 0 10px var(--color-accent-glow);
+  transform: translateY(-1.5px);
+}
+
+.ui-button.operator {
+  background: var(--color-surface);
+  color: var(--color-operator);
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+.ui-button.operator:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-operator);
+  box-shadow: 0 8px 25px rgba(56, 189, 248, 0.25), inset 0 0 10px rgba(56, 189, 248, 0.1);
+  color: #fff;
+  transform: translateY(-1.5px);
+}
+
+.ui-button.primary {
+  background: linear-gradient(135deg, var(--color-accent), #047857); /* Emerald to Dark Green */
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 1.5rem;
+  border: none;
+  box-shadow: 0 6px 20px var(--color-accent-glow), var(--shadow-inner);
+}
+.ui-button.primary:hover {
+  filter: brightness(1.2);
+  box-shadow: 0 10px 30px var(--color-accent-glow), var(--shadow-inner);
+}
+
+.ui-button.action {
+  background: var(--color-surface);
+  color: var(--color-error);
+  font-weight: 600;
+}
+.ui-button.action:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-error);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+}
+
+.ui-button.science {
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 1rem;
+  border-color: transparent;
+  box-shadow: none;
+}
+.ui-button.science:hover {
+  background: var(--color-surface);
+  color: var(--color-text-main);
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.ui-button.btn-empty {
+  visibility: hidden;
+}
