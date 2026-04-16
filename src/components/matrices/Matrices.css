@@ -192,7 +192,85 @@
   font-size: 1.25rem;
   display: flex;
   align-items: center;
-  justify-content: center;
   min-width: 60px;
   box-shadow: var(--shadow-inner);
+}
+
+/* === TABLET (481px - 1024px) === */
+@media (max-width: 1024px) {
+  .matrices-content {
+    flex-direction: column; /* Apilar en 1 columna, u organizar en grid de 2 columnas si caben */
+  }
+  
+  .matrix-panel {
+    min-width: 100%;
+    width: 100%;
+  }
+  
+  .matrix-actions-grid {
+    grid-template-columns: repeat(3, 1fr); /* Mantener botones en fila si es posible, o 2 cols */
+  }
+}
+
+/* === MOBILE (320px - 480px) === */
+@media (max-width: 480px) {
+  .matrices-scroll {
+    padding: var(--spacing-2);
+    gap: var(--spacing-2);
+  }
+  
+  .matrices-header {
+    padding: var(--spacing-2);
+    justify-content: center;
+  }
+  
+  .matrix-panel {
+    padding: var(--spacing-2);
+    gap: var(--spacing-2);
+  }
+  
+  .matrix-controls {
+    flex-direction: column;
+    gap: var(--spacing-2);
+    align-items: stretch;
+  }
+
+  .dimension-inputs {
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .matrix-grid {
+    padding: var(--spacing-2);
+    gap: 4px;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .matrix-cell {
+    width: 100%;
+    min-width: 40px;
+    padding: var(--spacing-1);
+    font-size: 1rem;
+  }
+  
+  .matrix-actions-grid {
+    grid-template-columns: 1fr; /* Apilar botones para mejor tappability */
+    gap: 8px;
+  }
+  
+  .matrix-result-box {
+    min-height: 150px;
+    padding: var(--spacing-2);
+  }
+  
+  .scalar-result {
+    font-size: 2.5rem;
+  }
+  
+  .matrix-cell-display {
+    min-width: 45px;
+    padding: var(--spacing-1);
+    font-size: 1rem;
+  }
 }

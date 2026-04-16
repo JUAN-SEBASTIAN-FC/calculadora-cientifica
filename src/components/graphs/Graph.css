@@ -8,7 +8,7 @@
 }
 
 
-@media (max-width: 768px) { .graph-container { flex-direction: column; } }
+
 
 .graph-sidebar {
   width: 320px;
@@ -22,14 +22,7 @@
   z-index: 10;
 }
 
-@media (max-width: 768px) {
-  .graph-sidebar {
-    width: 100%;
-    max-height: 300px;
-    border-right: none;
-    border-bottom: 1px solid var(--color-border);
-  }
-}
+
 
 .graph-title {
   color: var(--color-accent-bright);
@@ -142,7 +135,44 @@
   pointer-events: none;
 }
 
-/* Neon tech vibe */
-.glass-glow {
-  filter: drop-shadow(0 0 12px var(--color-accent-glow));
+/* === RESPONSIVE REFINEMENTS === */
+@media (max-width: 768px) {
+  .graph-container {
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  
+  .graph-sidebar {
+    width: 100%;
+    max-height: 280px;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--spacing-3);
+  }
+
+  .graph-plot-area {
+    padding: var(--spacing-2);
+    height: 350px; /* Tamaño controlado para móviles */
+    flex: none;
+  }
+
+  .svg-container {
+    height: 100%;
+    aspect-ratio: 1 / 1; /* Formato cuadrado en móvil suele verse mejor */
+    max-height: 100%;
+  }
+
+  .graph-title {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .graph-plot-area {
+    height: 280px; /* Aún más pequeño en teléfonos Pro/Mini */
+  }
+  
+  .graph-input {
+    font-size: 1.1rem;
+  }
 }

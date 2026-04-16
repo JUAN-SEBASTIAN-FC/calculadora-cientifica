@@ -148,19 +148,64 @@
   font-size: 1.25rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
+  .keypad-grid.scientific {
+    grid-template-columns: repeat(5, 1fr); /* Better fit for tablet */
+  }
+  .typing-mode .display-expression { font-size: 3rem; }
+  .evaluated-mode .display-result { font-size: 3rem; }
+}
+
+@media (max-width: 480px) {
+  .calculator-container {
+    border-radius: var(--radius-md);
+    border: none;
+    box-shadow: none;
+  }
+  
+  .display-area {
+    min-height: 90px;
+    padding: var(--spacing-2);
+  }
+  
+  .display-expression::placeholder {
+    font-size: 1.2rem;
+  }
+
+  .typing-mode .display-expression {
+    font-size: 2.2rem;
+  }
+
+  .evaluated-mode .display-result {
+    font-size: 2.5rem;
+  }
+
+  .keypad-area {
+    padding: var(--spacing-1);
+  }
+  
+  .keypad-grid {
+    gap: 6px;
+  }
+
   .keypad-grid.scientific {
     grid-template-columns: repeat(4, 1fr);
     overflow-y: auto;
-    padding-right: 4px;
-    gap: var(--spacing-2);
+    padding-right: 2px;
   }
+  
+  .keypad-grid .ui-button {
+    font-size: 1.2rem;
+    border-radius: var(--radius-md);
+  }
+  
   .keypad-grid .ui-button.default {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
-}
 
-.btn-equals {
+  .keypad-grid .ui-button.operator {
+    font-size: 1.5rem;
+  }
 }
 
 .btn-zero {
