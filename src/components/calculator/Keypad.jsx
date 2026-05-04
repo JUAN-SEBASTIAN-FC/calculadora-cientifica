@@ -1,23 +1,45 @@
 import { useCalculatorStore } from '../../store/useCalculatorStore';
+import { isErrorResult } from '../../engine/mathEngine';
 import Button from '../ui/Button';
 import { Delete } from 'lucide-react';
 import './Calculator.css';
 
+// Operadores que NO pueden reemplazar a otro operador
+// (el '-' es especial: puede ser signo negativo)
 const OPERATORS = ['+', '-', '×', '÷', '%', '^'];
+const BINARY_OPERATORS = ['+', '×', '÷', '^']; // nunca como primer char ni dobles
 
 export default function Keypad() {
-  const { expression, setExpression, calculate, clearExpression, isBasicMode, isEvaluated, result } = useCalculatorStore();
+  const {
+    expression,
+    result,
+    setExpression,
+    calculate,
+    clearExpression,
+    appendAfterError,
+    isBasicMode,
+    isEvaluated,
+  } = useCalculatorStore();
 
   const handleChar = (char) => (e) => {
-    e.preventDefault(); 
-    
+    e.preventDefault();
+
     const input = document.getElementById('calc-display');
     const isCharOp = OPERATORS.includes(char);
+    const isBinaryOp = BINARY_OPERATORS.includes(char);
 
+    // Fix 1.4: si hay error en el resultado, no contaminar expresión
+    if (isErrorResult(result)) {
+      appendAfterError(char);
+      return;
+    }
+
+    // Si acaba de evaluar (=), continuar desde el resultado
     if (isEvaluated) {
       if (isCharOp) {
-        setExpression(result + char);
-        setTimeout(() => input?.setSelectionRange(result.length + 1, result.length + 1), 0);
+        const newExpr = result + char;
+        setExpression(newExpr);
+        setTimeout(() => input?.setSelectionRange(newExpr.length, newExpr.length), 0);
       } else {
         setExpression(char);
         setTimeout(() => input?.setSelectionRange(1, 1), 0);
@@ -26,53 +48,51 @@ export default function Keypad() {
     }
 
     if (!input) {
-      if (expression.length === 0 && isCharOp && char !== '-') return;
+      if (expression.length === 0 && isBinaryOp) return;
       setExpression(expression + char);
       return;
     }
 
-    let start = input.selectionStart || 0;
-    let end = input.selectionEnd || 0;
-    
-    if (expression.length === 0 && start === 0 && isCharOp && char !== '-') return;
-    
-    const prevCharIsOp = start > 0 && OPERATORS.includes(expression[start - 1]);
-    
+    let start = input.selectionStart ?? expression.length;
+    let end = input.selectionEnd ?? expression.length;
+
+    // No permitir operador binario al inicio
+    if (expression.length === 0 && start === 0 && isBinaryOp) return;
+
+    const prevChar = start > 0 ? expression[start - 1] : '';
+    const prevCharIsOp = OPERATORS.includes(prevChar);
+
     let newExpr;
     let newPos = start + char.length;
 
-    if (isCharOp && prevCharIsOp) {
-      // Reemplazar operador previo
+    // Fix 1.1: solo reemplazar operador previo si el char TAMBIÉN es binario
+    // Si es '-', permitir ingresarlo después de cualquier operador (número negativo)
+    if (isBinaryOp && prevCharIsOp) {
+      // Reemplazar el operador anterior por el nuevo operador binario
       newExpr = expression.substring(0, start - 1) + char + expression.substring(end);
       newPos = start - 1 + char.length;
     } else {
-      // Inserción normal
+      // Inserción normal (incluyendo '-' después de operador = número negativo)
       newExpr = expression.substring(0, start) + char + expression.substring(end);
     }
 
     setExpression(newExpr);
-
-    // Restaurar posición del cursor tras el re-render
-    setTimeout(() => {
-      input.setSelectionRange(newPos, newPos);
-    }, 0);
+    setTimeout(() => input.setSelectionRange(newPos, newPos), 0);
   };
 
   const handleDel = (e) => {
     e.preventDefault();
     const input = document.getElementById('calc-display');
     if (!input || expression.length === 0) return;
-    
-    let start = input.selectionStart || 0;
-    let end = input.selectionEnd || 0;
+
+    let start = input.selectionStart ?? expression.length;
+    let end = input.selectionEnd ?? expression.length;
 
     if (start === end && start > 0) {
-      // Borrar un caracter hacia atrás
       const newExpr = expression.substring(0, start - 1) + expression.substring(end);
       setExpression(newExpr);
       setTimeout(() => input.setSelectionRange(start - 1, start - 1), 0);
     } else if (start !== end) {
-      // Borrar selección
       const newExpr = expression.substring(0, start) + expression.substring(end);
       setExpression(newExpr);
       setTimeout(() => input.setSelectionRange(start, start), 0);
@@ -83,16 +103,16 @@ export default function Keypad() {
     e.preventDefault();
     calculate();
   };
-  
+
   const handleAC = (e) => {
     e.preventDefault();
     clearExpression();
-  }
+  };
 
   return (
     <div className="keypad-area">
       <div className={`keypad-grid ${!isBasicMode ? 'scientific' : ''}`}>
-        
+
         {/* Fila Principal 1 */}
         {!isBasicMode && (
           <>
@@ -152,12 +172,12 @@ export default function Keypad() {
             <Button variant="science" onMouseDown={handleChar('!')}>x!</Button>
           </>
         )}
-        <Button className={isBasicMode ? "btn-zero" : ""} onMouseDown={handleChar('0')}>0</Button>
+        <Button className={isBasicMode ? 'btn-zero' : ''} onMouseDown={handleChar('0')}>0</Button>
         <Button onMouseDown={handleChar('.')}>.</Button>
         {!isBasicMode && (
           <Button variant="operator" onMouseDown={handleChar(')')}>)</Button>
         )}
-        <Button variant="primary" className={isBasicMode ? "btn-equals" : ""} onMouseDown={handleCalc}>=</Button>
+        <Button variant="primary" className={isBasicMode ? 'btn-equals' : ''} onMouseDown={handleCalc}>=</Button>
       </div>
     </div>
   );
